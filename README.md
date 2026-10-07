@@ -1,10 +1,144 @@
-# Pet Adoption
+# 🐾 Pet Adoption System
 
-Simple pet adoption marketplace: Node/Express backend and React (Vite) frontend.
+A full-stack web application that connects pet owners and adopters through a simple and secure pet adoption marketplace.
 
-**Contents**
-- `backend/` — Express API, MongoDB models, Stripe integration
-- `frontend/` — React app (Vite)
+The system allows users to browse available pets, view detailed pet information, submit adoption requests, make secure payments through Stripe, and receive notifications about their bookings. Administrators and pet owners can manage pet listings, bookings, and related records.
+
+---
+
+## ✨ Features
+
+### 👤 Authentication & Authorization
+- User registration and login
+- JWT-based authentication
+- Role-based access control
+- Protected routes and APIs
+- Admin and regular user roles
+
+### 🐶 Pet Management
+- Add new pets for adoption
+- Browse available pets
+- View detailed pet information
+- Support for:
+  - Dogs
+  - Cats
+  - Birds
+- Pet attributes including:
+  - Name
+  - Species
+  - Breed
+  - Age
+  - Gender
+  - Size
+  - Behaviour
+  - Price
+  - Description
+  - Photos
+- Pet availability and adoption status management
+
+### 📋 Adoption & Booking
+- Submit adoption requests
+- Track booking status
+- Booking approval after successful payment
+- Pet status automatically changes to `adopted` after successful payment
+
+### 💳 Stripe Payments
+- Stripe Checkout integration
+- Secure test-mode payments
+- Payment records stored in MongoDB
+- Stripe webhook integration
+- Automatic booking confirmation after successful payment
+- Automatic pet status update after successful payment
+
+### 🔔 Notifications
+- Payment success notifications
+- Booking approval notifications
+- Pet owner notifications when an adoption is completed
+
+### 📷 Image Uploads
+- Upload pet images
+- Store uploaded image URLs with pet listings
+- Display pet photos in the application
+
+### 🛠️ Admin & Management
+- Manage users
+- Manage pets
+- Manage bookings
+- Manage notifications
+- Manage medical records
+- Administrative operations through protected APIs
+
+---
+
+## 🏗️ Tech Stack
+
+### Frontend
+- React.js
+- Vite
+- Tailwind CSS
+- React Router
+- Axios
+- Lucide React
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+- REST APIs
+
+### Payments
+- Stripe Checkout
+- Stripe Webhooks
+- Stripe CLI for local webhook testing
+
+### Development Tools
+- Git
+- GitHub
+- VS Code
+- Postman / Thunder Client
+- npm
+
+---
+
+## 📁 Project Structure
+
+```text
+PetAdoptionSystem/
+│
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── middleware/
+│   │   └── ...
+│   │
+│   ├── scripts/
+│   │   └── seed.js
+│   │
+│   ├── .env
+│   ├── package.json
+│   └── server.js
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── api/
+│   │   ├── utils/
+│   │   └── ...
+│   │
+│   ├── .env.local
+│   ├── package.json
+│   ├── postcss.config.cjs
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+├── .gitignore
+├── README.md
+└── requirements.txt
 
 **Ports**
 - Backend (dev): `http://localhost:5000` (configurable via `backend/.env` `PORT`)
@@ -36,7 +170,7 @@ Notes:
 ## Install & Run (development)
 Open two terminals (or use your favourite multiplexer).
 
-Backend (PowerShell):
+## Backend (PowerShell):
 ```powershell
 cd backend
 npm install
@@ -46,7 +180,7 @@ npm run dev
 npm start
 ```
 
-Frontend (PowerShell):
+## Frontend (PowerShell):
 ```powershell
 cd frontend
 npm install
