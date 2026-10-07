@@ -231,10 +231,3 @@ Backend: run `npm start` (ensure `NODE_ENV=production` and suitable process mana
 - Connection errors: confirm `MONGO_URI` in `backend/.env` and that the DB is reachable.
 - Stripe errors: ensure `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are set. For local webhook testing, consider using `stripe cli` to forward webhooks.
 
-## Want me to add?
-- Single root script to `npm install` + start both services.
-- `VITE_API_URL` wiring to the frontend `axios` client.
-- Dockerfile(s) and `docker-compose` for local development.
-
----
-Generated README by repository automation — edit as needed.
