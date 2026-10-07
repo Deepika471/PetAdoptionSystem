@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Home, PawPrint, Users, Calendar, Heart, Star, TrendingUp, BarChart3 } from 'lucide-react';
+import { Home, PawPrint, Users, Calendar, Heart, TrendingUp, BarChart3 } from 'lucide-react';
 import api from '../api/api';
 
 export default function AdminDashboard(){
@@ -113,21 +113,7 @@ export default function AdminDashboard(){
             <div className="h-1 bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
           </div>
 
-          {/* Average Rating Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-yellow-100 transform hover:scale-105">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-gradient-to-br from-yellow-400 to-yellow-500 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg">
-                <Star className="text-white fill-white" size={32} />
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Avg Rating</p>
-                <p className="text-4xl font-bold text-gray-800 mt-1">
-                  {data.avgRating?.toFixed(2) || 'N/A'}
-                </p>
-              </div>
-            </div>
-            <div className="h-1 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"></div>
-          </div>
+          {/* Ratings/Reviews removed per admin preference */}
 
           {/* Success Rate Card */}
           <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-blue-100 transform hover:scale-105">

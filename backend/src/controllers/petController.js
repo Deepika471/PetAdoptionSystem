@@ -69,53 +69,148 @@ exports.updatePet = async (req, res) => {
 
 // list pets with filters and owner fallback to admin when needed
 // Non-admins only see available pets (status != 'adopted')
+// exports.listPets = async (req, res) => {
+//   try {
+//     const q = {};
+//     if (req.query.species) q.species = req.query.species;
+//     if (req.query.status) q.status = req.query.status;
+    
+//     // Only admins can see adopted pets
+//     if (req.user?.role !== 'admin') {
+//       q.status = { $ne: 'adopted' }; // Hide adopted pets from non-admins
+//     }
+    
+//     // Add search, pagination
+//     const page = parseInt(req.query.page || '1');
+//     const limit = Math.min(parseInt(req.query.limit || '20'), 100);
+//     const skip = (page - 1) * limit;
+//     const pets = await Pet.find(q).populate('owner', 'name email role').skip(skip).limit(limit).lean();
+//     // if a pet.owner is null, we can attach admin info (resolve admin by email in env)
+//     const adminEmail = process.env.ADMIN_EMAIL;
+//     let admin = null;
+//     if (adminEmail) admin = await User.findOne({ email: adminEmail }).select('name email role');
+//     const transformed = pets.map(p => {
+//       if (!p.owner && admin) p.owner = admin;
+//       return p;
+//     });
+
+//     // Attach latest medical record for each pet (non-blocking but useful for list views)
+//     try {
+//       const withMedical = await Promise.all(transformed.map(async (p) => {
+//         try {
+//           const m = await MedicalRecord.findOne({ pet: p._id }).sort({ createdAt: -1 }).lean();
+//           if (m) p.medical = m;
+//         } catch (err) {
+//           // ignore per-pet medical lookup errors
+//           console.error('Failed to load medical for pet', p._id, err.message);
+//         }
+//         return p;
+//       }));
+//       return res.json({ page, limit, items: withMedical });
+//     } catch (err) {
+//       // If medical lookups fail, fall back to returning pets without medical
+//       console.error('Failed to attach medical records for list', err.message);
+//       return res.json({ page, limit, items: transformed });
+//     }
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+// list pets with filters and owner fallback to admin when needed
+// Non-admins only see available pets (status != 'adopted')
 exports.listPets = async (req, res) => {
   try {
     const q = {};
-    if (req.query.species) q.species = req.query.species;
+
+    /* --------------------------------
+       BASIC FILTERS
+    -------------------------------- */
+    if (req.query.species) q.species = req.query.species.toLowerCase();
     if (req.query.status) q.status = req.query.status;
-    
-    // Only admins can see adopted pets
-    if (req.user?.role !== 'admin') {
-      q.status = { $ne: 'adopted' }; // Hide adopted pets from non-admins
+
+    /* --------------------------------
+       QUIZ-BASED FILTERS ✅
+    -------------------------------- */
+    if (req.query.gender && req.query.gender !== 'none') {
+      q.gender = req.query.gender;
     }
-    
-    // Add search, pagination
+
+    if (req.query.size) {
+      q.size = req.query.size;
+    }
+
+    if (req.query.ageCategory) {
+      q.ageCategory = req.query.ageCategory;
+    }
+
+    if (req.query.behavior) {
+      q.behavior = req.query.behavior;
+    }
+
+    /* --------------------------------
+       VISIBILITY RULES
+    -------------------------------- */
+    if (req.user?.role !== 'admin') {
+      q.status = { $ne: 'adopted' };
+    }
+
+    /* --------------------------------
+       PAGINATION
+    -------------------------------- */
     const page = parseInt(req.query.page || '1');
     const limit = Math.min(parseInt(req.query.limit || '20'), 100);
     const skip = (page - 1) * limit;
-    const pets = await Pet.find(q).populate('owner', 'name email role').skip(skip).limit(limit).lean();
-    // if a pet.owner is null, we can attach admin info (resolve admin by email in env)
+
+    const pets = await Pet.find(q)
+      .populate('owner', 'name email role')
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    /* --------------------------------
+       OWNER FALLBACK (ADMIN)
+    -------------------------------- */
     const adminEmail = process.env.ADMIN_EMAIL;
     let admin = null;
-    if (adminEmail) admin = await User.findOne({ email: adminEmail }).select('name email role');
+    if (adminEmail) {
+      admin = await User.findOne({ email: adminEmail }).select('name email role');
+    }
+
     const transformed = pets.map(p => {
       if (!p.owner && admin) p.owner = admin;
       return p;
     });
 
-    // Attach latest medical record for each pet (non-blocking but useful for list views)
+    /* --------------------------------
+       ATTACH LATEST MEDICAL RECORD
+    -------------------------------- */
     try {
-      const withMedical = await Promise.all(transformed.map(async (p) => {
-        try {
-          const m = await MedicalRecord.findOne({ pet: p._id }).sort({ createdAt: -1 }).lean();
-          if (m) p.medical = m;
-        } catch (err) {
-          // ignore per-pet medical lookup errors
-          console.error('Failed to load medical for pet', p._id, err.message);
-        }
-        return p;
-      }));
+      const withMedical = await Promise.all(
+        transformed.map(async (p) => {
+          try {
+            const m = await MedicalRecord.findOne({ pet: p._id })
+              .sort({ createdAt: -1 })
+              .lean();
+            if (m) p.medical = m;
+          } catch (err) {
+            console.error('Medical lookup failed for pet', p._id);
+          }
+          return p;
+        })
+      );
+
       return res.json({ page, limit, items: withMedical });
     } catch (err) {
-      // If medical lookups fail, fall back to returning pets without medical
-      console.error('Failed to attach medical records for list', err.message);
+      console.error('Failed attaching medical records', err.message);
       return res.json({ page, limit, items: transformed });
     }
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 exports.getPet = async (req, res) => {
   try {

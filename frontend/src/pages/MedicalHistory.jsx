@@ -20,13 +20,13 @@ export default function MedicalHistory({ petId }) {
     vaccinationCard: '',
     lastVaccinationDate: '',
     nextVaccinationDate: '',
-    vaccines: { dog: {}, cat: {}, rabbit: {} },
+    vaccines: { dog: {}, cat: {}, bird: {} },
 
     deworming: { lastDate: '', nextDate: '', tickFleaTreatment: false, tickFleaDate: '' },
     sterilization: { status: false, date: '', clinicName: '' },
     medicalConditions: { chronicIllness: '', pastInjuries: '', medications: '', allergies: '', behaviouralNotes: '' },
     physicalExam: { weightKg: '', bodyCondition: '', dentalCondition: '', coatCondition: '', mobility: '' },
-    labTests: { dog: { tickFever: '', heartworm: '', cbcReport: '' }, cat: { fiv: '', felv: '', cbcReport: '' }, rabbit: { dentalCheckCompleted: false, parasiteTest: false } },
+    labTests: { dog: { tickFever: '', heartworm: '', cbcReport: '' }, cat: { fiv: '', felv: '', cbcReport: '' }, bird: { dentalCheckCompleted: false, parasiteTest: false } },
     microchip: { id: '', registered: false },
     vet: { name: '', clinicAddress: '', contactNumber: '', lastCheckupDate: '' },
     grooming: { bathingFrequency: '', nailTrimmedRecently: false, earCleaningDate: '' },
@@ -99,11 +99,11 @@ export default function MedicalHistory({ petId }) {
         </label>
       ));
     }
-    if (s === 'rabbit') {
+    if (s === 'bird') {
       const keys = ['myxomatosis','rhdv1','rhdv2'];
       return keys.map(k => (
         <label key={k} className="inline-flex items-center gap-2">
-          <input type="checkbox" checked={!!form.vaccines.rabbit?.[k]} onChange={e=>setForm(s=>({ ...s, vaccines: { ...s.vaccines, rabbit: { ...s.vaccines.rabbit, [k]: e.target.checked } } }))} />
+          <input type="checkbox" checked={!!form.vaccines.bird?.[k]} onChange={e=>setForm(s=>({ ...s, vaccines: { ...s.vaccines, bird: { ...s.vaccines.bird, [k]: e.target.checked } } }))} />
           {k.toUpperCase()}
         </label>
       ));
@@ -311,10 +311,10 @@ export default function MedicalHistory({ petId }) {
                 </div>
               )}
 
-              {pet?.species?.toLowerCase() === 'rabbit' && (
+              {pet?.species?.toLowerCase() === 'bird' && (
                 <div className="grid md:grid-cols-2 gap-2">
-                  <label className="flex items-center gap-2"><input type="checkbox" checked={!!form.labTests.rabbit.dentalCheckCompleted} onChange={e=>setForm(s=>({ ...s, labTests: { ...s.labTests, rabbit: { ...s.labTests.rabbit, dentalCheckCompleted: e.target.checked } } }))} /> Dental Check Completed</label>
-                  <label className="flex items-center gap-2"><input type="checkbox" checked={!!form.labTests.rabbit.parasiteTest} onChange={e=>setForm(s=>({ ...s, labTests: { ...s.labTests, rabbit: { ...s.labTests.rabbit, parasiteTest: e.target.checked } } }))} /> Parasite Test</label>
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={!!form.labTests.bird.dentalCheckCompleted} onChange={e=>setForm(s=>({ ...s, labTests: { ...s.labTests, bird: { ...s.labTests.bird, dentalCheckCompleted: e.target.checked } } }))} /> Dental Check Completed</label>
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={!!form.labTests.bird.parasiteTest} onChange={e=>setForm(s=>({ ...s, labTests: { ...s.labTests, bird: { ...s.labTests.bird, parasiteTest: e.target.checked } } }))} /> Parasite Test</label>
                 </div>
               )}
             </div>

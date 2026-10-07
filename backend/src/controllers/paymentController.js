@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 // Lazy initialize Stripe to avoid crashes if STRIPE_SECRET_KEY is missing
 let stripe = null;
-function getStripe() {
+function getStripe() { 
   if (!stripe) {
     if (!process.env.STRIPE_SECRET_KEY) {
       throw new Error('STRIPE_SECRET_KEY not set in .env');
@@ -22,7 +22,6 @@ exports.createCheckoutSession = async (req, res) => {
     const stripe = getStripe();
     const { bookingId, successUrl, cancelUrl } = req.body;
     if (!bookingId) return res.status(400).json({ message: 'bookingId required' });
-
     const booking = await Booking.findById(bookingId).populate('pet buyer owner');
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
 
